@@ -1,0 +1,90 @@
+import numpy as np
+import pandas as pd
+
+
+def generate_sample_data():
+  """Creates a dummy sales dataset for demonstration purposes."""
+  data = {
+      "OrderID": [101, 102, 103, 104, 105, 106, 107, 108, 109, 110],
+      "Product": [
+          "Laptop",
+          "Mouse",
+          "Keyboard",
+          "Monitor",
+          "Laptop",
+          "Mouse",
+          "Monitor",
+          "Keyboard",
+          "Laptop",
+          "Monitor",
+      ],
+      "Category": [
+          "Electronics",
+          "Accessories",
+          "Accessories",
+          "Electronics",
+          "Electronics",
+          "Accessories",
+          "Electronics",
+          "Accessories",
+          "Electronics",
+          "Electronics",
+      ],
+      "Price": [
+          75000,
+          500,
+          1500,
+          12000,
+          75000,
+          500,
+          12000,
+          1500,
+          75000,
+          12000,
+      ],
+      "Quantity": [1, 2, 1, 1, 2, 5, 2, 3, 1, 4],
+  }
+  df = pd.DataFrame(data)
+  df.to_csv("sales_data.csv", index=False)
+  print("Sample sales_data.csv generated successfully!\n")
+
+
+def analyze_sales():
+  # 1. Load Data using Pandas
+  df = pd.read_csv("sales_data.csv")
+
+  print("--- Raw Sales Data ---")
+  print(df, "\n")
+
+  # 2. Add a new calculated column (Total Revenue per order)
+  df["TotalRevenue"] = df["Price"] * df["Quantity"]
+
+  # 3. Pandas Operations (Groupby & Aggregation)
+  print("--- Total Revenue by Category ---")
+  category_revenue = df.groupby("Category")["TotalRevenue"].sum()
+  print(category_revenue, "\n")
+
+  # 4. NumPy Operations on Revenue Data
+  revenues = df["TotalRevenue"].to_numpy()
+
+  total_sales_sum = np.sum(revenues)
+  mean_revenue = np.mean(revenues)
+  max_revenue = np.max(revenues)
+  min_revenue = np.min(revenues)
+
+  print("--- NumPy Statistical Insights ---")
+  print(f"Total Sales Revenue : Rs. {total_sales_sum}")
+  print(f"Average Order Value : Rs. {mean_revenue:.2f}")
+  print(f"Highest Single Order: Rs. {max_revenue}")
+  print(f"Lowest Single Order : Rs. {min_revenue}\n")
+
+  # 5. Filtering Data using Pandas
+  high_value_orders = df[df["TotalRevenue"] > 20000]
+  print("--- High Value Orders (> Rs. 20,000) ---")
+  print(high_value_orders[["OrderID", "Product", "TotalRevenue"]])
+
+
+if __name__ == "__main__":
+  generate_sample_data()
+  analyze_sales()
+
